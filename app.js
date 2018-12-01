@@ -6,7 +6,7 @@ import ReactModal from 'react-modal';
 let drugs = require('./drugsList.json')
 let changeItem;
 let addingDrug = [];
-
+let arr=[];
 
 class List extends React.Component {
     constructor() {
@@ -16,7 +16,10 @@ class List extends React.Component {
             modalstate: false,
             addDrug: [],
             name: '',
-            age: ''
+            age: '',
+            Prescriptions: []
+
+
         }
     }
     statusModal() {
@@ -26,21 +29,21 @@ class List extends React.Component {
             modalstate: modalstatus
         })
     }
-
     addingDrug() {
+        
         addingDrug.push(changeItem)
         this.setState({
             addDrug: addingDrug
-
+            
         })
-
+        
     }
     onChangeAddingDrug(){
         this.setState({
-            addDrug: event.target.value
+            addDrug: event.target.value,
+            
         })
     }
-
     onChangeName(event) {
        // console.log(event.target.value)
         this.setState({
@@ -53,8 +56,6 @@ class List extends React.Component {
             age: event.target.value
         })
     }
-
-
     render() {
         return (
         <div>
@@ -66,7 +67,6 @@ class List extends React.Component {
                     <TextInput type="number" placeholder="Age" onChange={this.onChangeAge.bind(this)} value={this.state.age} />
                     <Autocomplete
                         title="Drugs Selction"
-
                         onChange={changedItem => {
                             changeItem = changedItem
                         }}
@@ -76,10 +76,9 @@ class List extends React.Component {
                             const { getInputProps, getRef, inputValue } = props
                             return (
                                 <div>
-
                                     <TextInput
                                         placeholder="Drugs Selection"
-                                        //value={inputValue}
+                                        value={inputValue}
                                         innerRef={getRef}
                                         {...getInputProps()}
                                     />
@@ -87,28 +86,52 @@ class List extends React.Component {
                                     <p>{this.state.addDrug + ''}</p>
                                 </div>)
                         }}
-
                     </Autocomplete>
                     <button id="save" onClick={() => {
-                           
-                            this.setState({
-                                //addingDrug:[],
-                                addDrug: [],
+
+let prescription= {
+    addDrug:[this.state.addDrug],
+    name:this.state.name,
+    age:this.state.age
+}
+arr.push(prescription)
+
+console.log(this.state.Prescriptions)
+this.setState({
+    Prescriptions:arr
+    
+})
+                        
+                       addingDrug=[];
+                        this.statusModal()
+                            this.setState({ 
+                                //changeItem:'',
+                              addDrug: [],
                                 name: '',
                                 age:''
                             })
-                           
                             }
-                            
                             }>save</button>
+                          
                 </ReactModal>
-
             </header>
+            <div >
+                    {this.state.Prescriptions.map((item, i) => {
+                        return (
+                            <div key={i}>
+                            <br />
+                            <br />
+                                name : {item.name}
+                                <br />
+                                age : {item.age}
+                                <br />
+                                drugs : {item.addDrug + ''}
+                               
+                            </div>
+                        )
+                    })}
+                </div>
         </div>)
-
     }
-
-
-
 }
 reactDOM.render(<List />, document.getElementById("root"))
