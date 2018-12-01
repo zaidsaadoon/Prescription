@@ -6,7 +6,7 @@ import ReactModal from 'react-modal';
 let drugs = require('./drugsList.json')
 let changeItem;
 let addingDrug = [];
-let arr=[];
+let arr = [];
 
 class List extends React.Component {
     constructor() {
@@ -23,29 +23,29 @@ class List extends React.Component {
         }
     }
     statusModal() {
-       // console.log(this.state.modalstate)
+        // console.log(this.state.modalstate)
         let modalstatus = !this.state.modalstate
         this.setState({
             modalstate: modalstatus
         })
     }
     addingDrug() {
-        
+
         addingDrug.push(changeItem)
         this.setState({
             addDrug: addingDrug
-            
+
         })
-        
+
     }
-    onChangeAddingDrug(){
+    onChangeAddingDrug() {
         this.setState({
             addDrug: event.target.value,
-            
+
         })
     }
     onChangeName(event) {
-       // console.log(event.target.value)
+        // console.log(event.target.value)
         this.setState({
             name: event.target.value
         })
@@ -56,82 +56,78 @@ class List extends React.Component {
             age: event.target.value
         })
     }
+    onClickSave() {
+        let prescription = {
+            addDrug: [this.state.addDrug],
+            name: this.state.name,
+            age: this.state.age
+        }
+        arr.push(prescription)
+        console.log(this.state.Prescriptions)
+        this.setState({
+            Prescriptions: arr
+        })
+        addingDrug = [];
+        this.statusModal()
+        this.setState({
+            //changeItem:'',
+            addDrug: [],
+            name: '',
+            age: ''
+        })
+    }
     render() {
         return (
-        <div>
-            <header>
-                <div>Prescription</div>
-                <button id="button1" onClick={() => { this.statusModal() }}>New prescription</button>
-                <ReactModal isOpen={this.state.modalstate} >
-                    <TextInput type="text" placeholder="Name" onChange={this.onChangeName.bind(this)} value={this.state.name} />
-                    <TextInput type="number" placeholder="Age" onChange={this.onChangeAge.bind(this)} value={this.state.age} />
-                    <Autocomplete
-                        title="Drugs Selction"
-                        onChange={changedItem => {
-                            changeItem = changedItem
-                        }}
-                        items={this.state.durgList}
-                    >
-                        {(props) => {
-                            const { getInputProps, getRef, inputValue } = props
-                            return (
-                                <div>
-                                    <TextInput
-                                        placeholder="Drugs Selection"
-                                        value={inputValue}
-                                        innerRef={getRef}
-                                        {...getInputProps()}
-                                    />
-                                    <button onClick={this.addingDrug.bind(this)}>add drug</button>
-                                    <p>{this.state.addDrug + ''}</p>
-                                </div>)
-                        }}
-                    </Autocomplete>
-                    <button id="save" onClick={() => {
+            <div>
+                <header>
+                    <div>Prescription</div>
+                    <button id="button1" onClick={() => { this.statusModal() }}>New prescription</button>
+                    <ReactModal isOpen={this.state.modalstate} >
+                        <TextInput type="text" placeholder="Name" onChange={this.onChangeName.bind(this)} value={this.state.name} />
+                        <TextInput type="number" placeholder="Age" onChange={this.onChangeAge.bind(this)} value={this.state.age} />
+                        <Autocomplete
+                            title="Drugs Selction"
+                            onChange={changedItem => {
+                                changeItem = changedItem
+                            }}
+                            items={this.state.durgList}
+                        >
+                            {(props) => {
+                                const { getInputProps, getRef, inputValue } = props
+                                return (
+                                    <div>
+                                        <TextInput
+                                            placeholder="Drugs Selection"
+                                            value={inputValue}
+                                            innerRef={getRef}
+                                            {...getInputProps()}
+                                        />
+                                        <button onClick={this.addingDrug.bind(this)}>add drug</button>
+                                        <p>{this.state.addDrug + ''}</p>
+                                    </div>)
+                            }}
+                        </Autocomplete>
+                        <button id="save" onClick={this.onClickSave.bind(this)}>save</button>
 
-let prescription= {
-    addDrug:[this.state.addDrug],
-    name:this.state.name,
-    age:this.state.age
-}
-arr.push(prescription)
-
-console.log(this.state.Prescriptions)
-this.setState({
-    Prescriptions:arr
-    
-})
-                        
-                       addingDrug=[];
-                        this.statusModal()
-                            this.setState({ 
-                                //changeItem:'',
-                              addDrug: [],
-                                name: '',
-                                age:''
-                            })
-                            }
-                            }>save</button>
-                          
-                </ReactModal>
-            </header>
-            <div >
+                    </ReactModal>
+                </header>
+                <div >
                     {this.state.Prescriptions.map((item, i) => {
                         return (
                             <div key={i}>
-                            <br />
-                            <br />
+                                <br />
+                                <br />
                                 name : {item.name}
                                 <br />
                                 age : {item.age}
                                 <br />
                                 drugs : {item.addDrug + ''}
-                               
+
                             </div>
                         )
                     })}
                 </div>
-        </div>)
+            </div>)
     }
 }
 reactDOM.render(<List />, document.getElementById("root"))
